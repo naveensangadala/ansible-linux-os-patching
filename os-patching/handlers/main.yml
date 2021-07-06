@@ -1,0 +1,4 @@
+---
+- name: reboot system
+  reboot:
+    msg: "Reboot initiated by Ansible after the update"

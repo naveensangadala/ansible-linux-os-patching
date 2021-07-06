@@ -1,0 +1,9 @@
+---
+- name: Patching the linux system using patching roles
+  hosts: devservers
+  become: true
+  vars:
+    Patching_type: "KERNEL"
+#    Patching_type: "{{ patching_type_os }}"
+  roles:
+    - "os-patching"
