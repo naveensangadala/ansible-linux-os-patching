@@ -1,6 +1,6 @@
 ---
 - name: Patching the linux system using patching roles
-  hosts: devservers
+  hosts: all
   become: true
   vars:
     Patching_type: "KERNEL"
