@@ -1,0 +1,59 @@
+---
+- hosts: localhost
+#- name: Backup System Configuration
+  gather_facts: true
+  tasks:
+  - name: Check /tmp freespace
+    shell: df /tmp --output\=avail | tail -1
+    register: tmp_freespace
+
+  - fail:
+        msg: /tmp does not have the minimum space required to continue (500 MB requested).
+    when: tmp_freespace.stdout|float < 500000
+
+  - name: Create Directories for Backups
+    file:
+      path: /tmp/config_backup/
+      state: directory
+      mode: '0700'
+ 
+#  - name: Backup /etc Directory
+#    archive:
+#      path: /etc
+#      dest: /tmp/config_backup/{{ ansible_hostname }}-etc.tgz
+ 
+  - name: Backup Network Interface Info
+#    shell: ip a &gt; /tmp/config_backup/interface-config.txt
+    shell: ip a &> /tmp/config_backup/interface-config.txt
+ 
+  - name: Backup Routing Table
+    shell: ip route &> /tmp/config_backup/route-config.txt
+ 
+  - name: Backup Filesystem Sizes
+    shell: df -hP &> /tmp/config_backup/df-output.txt
+ 
+#  - name: Backup Physical Volume Info
+#    shell: pvs &> /tmp/config_backup/physical-volume-config.txt
+ 
+#  - name: Backup Volume Group Info
+#    shell: vgs &> /tmp/config_backup/volume-group-config.txt
+ 
+#  - name: Backup Logical Volume Info
+#    shell: lvs &> /tmp/config_backup/logical-volume-group-config.txt
+ 
+#  - name: Backup /root/anaconda-ks.cfg file
+#    shell: cp /root/anaconda-ks.cfg /tmp/config_backup/
+ 
+  - name: Backup lsblk --fs Info
+    shell: lsblk --fs &> /tmp/config_backup/lsblk-config.txt
+ 
+  - name: Backup TAR Directory
+    archive:
+      path: /tmp/config_backup
+      dest: /tmp/{{ ansible_hostname }}_config_backup.tgz
+ 
+  - name: Copy Configs to Centralized Location
+    fetch:
+      src: /tmp/{{ ansible_hostname }}_config_backup.tgz
+      dest: /tmp/{{ ansible_hostname }}/
+      flat: yes
