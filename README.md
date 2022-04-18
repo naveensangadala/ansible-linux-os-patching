@@ -4,8 +4,8 @@ patching
 This role to updates the linux system ( Redhat or Centos ) as follows:  
 1- Prechecks like Repository checks, and gather all your mandatory checks information(mount,ip details,routing,services,etc).  
 2- if repository is success, patch the server.  
-3- if patch the server reboot.  
-4- wait for  server booting, once back and validate your server with your precheck data.  
+3- patch the server with reboot.  
+4- wait for server booting, once back and validate your server with your precheck data.  
 
 
 There are 2 Patching_type you can use:  
